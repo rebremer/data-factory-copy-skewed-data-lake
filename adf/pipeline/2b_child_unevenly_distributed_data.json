@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Folders').output.childItems",
+						"value": "@json(activity('Get Folders').output.Response)",
 						"type": "Expression"
 					},
 					"activities": [
@@ -107,7 +107,8 @@
 		],
 		"parameters": {
 			"Container": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "adfparalleltest"
 			}
 		},
 		"annotations": []
