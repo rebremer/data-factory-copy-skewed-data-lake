@@ -1,0 +1,9 @@
+{
+	"name": "test-adf-copy-scale-adf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "fcf21ac2-0fcd-4ee2-bf6a-1131e359831b",
+		"tenantId": "16b3c013-d300-468d-ac64-7eda0820b6d3"
+	}
+}
