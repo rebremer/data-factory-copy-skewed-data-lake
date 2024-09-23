@@ -1,0 +1,24 @@
+{
+	"name": "sourcestor",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sourcestor",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"container": {
+				"type": "string"
+			},
+			"folder": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			}
+		}
+	}
+}

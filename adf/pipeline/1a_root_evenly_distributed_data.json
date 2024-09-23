@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
+				"name": "Get Containers",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -19,20 +19,63 @@
 						"referenceName": "sourcestor",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": "*",
-							"folder": "*"
+							"container": "@coalesce(null)",
+							"folder": "@coalesce(null)"
 						}
 					},
 					"fieldList": [
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
+						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
 						"type": "BinaryReadSettings"
 					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Containers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Containers').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "1b_child_evenly_distributed_data",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": false,
+								"parameters": {
+									"Container": {
+										"value": "@item().name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
 				}
 			}
 		],
