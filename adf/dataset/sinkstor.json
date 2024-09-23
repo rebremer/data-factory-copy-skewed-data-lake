@@ -1,8 +1,8 @@
 {
-	"name": "sourcestor",
+	"name": "sinkstor",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "adlsgen2source",
+			"referenceName": "adlsgen2sink",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -17,15 +17,7 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"folderPath": {
-					"value": "@dataset().folder",
-					"type": "Expression"
-				},
-				"container": {
-					"value": "@dataset().container",
-					"type": "Expression"
-				}
+				"type": "AzureBlobFSLocation"
 			}
 		}
 	}
