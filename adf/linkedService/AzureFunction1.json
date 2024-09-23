@@ -12,7 +12,7 @@
 		"annotations": [],
 		"type": "AzureFunction",
 		"typeProperties": {
-			"functionAppUrl": "https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?storage_account=testgdpstor2&storage_container=adfparalleltest",
+			"functionAppUrl": "https://test-adf-copy-scale-fun.azurewebsites.net",
 			"authentication": "Anonymous"
 		}
 	},
