@@ -17,7 +17,12 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat(dataset().container, dataset().folder)",
+					"type": "Expression"
+				},
+				"fileSystem": "backup"
 			}
 		}
 	}
