@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Folders",
+				"name": "Get folders",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -39,11 +39,11 @@
 				}
 			},
 			{
-				"name": "Copy Folders",
+				"name": "Copy folders",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Folders",
+						"activity": "Get folders",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -110,7 +110,7 @@
 									"parameters": {
 										"container": "backup",
 										"folder": {
-											"value": "@concat(pipeline().parameters.Container, item().name)",
+											"value": "@concat(pipeline().parameters.Container,'/', item().name)",
 											"type": "Expression"
 										}
 									}
