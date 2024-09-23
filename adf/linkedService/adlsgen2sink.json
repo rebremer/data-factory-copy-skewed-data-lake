@@ -1,0 +1,10 @@
+{
+	"name": "adlsgen2sink",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://testgdpinformationf.dfs.core.windows.net/"
+		}
+	}
+}
