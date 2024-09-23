@@ -1,0 +1,11 @@
+{
+	"name": "adlsgen2source",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"serviceEndpoint": "https://testgdpstor2.blob.core.windows.net/",
+			"accountKind": "StorageV2"
+		}
+	}
+}
