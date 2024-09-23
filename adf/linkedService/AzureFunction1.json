@@ -1,0 +1,20 @@
+{
+	"name": "AzureFunction1",
+	"properties": {
+		"parameters": {
+			"storage_account": {
+				"type": "string"
+			},
+			"storage_container": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureFunction",
+		"typeProperties": {
+			"functionAppUrl": "https://test-adf-copy-scale-fun.azurewebsites.net",
+			"authentication": "Anonymous"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}
