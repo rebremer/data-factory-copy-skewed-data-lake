@@ -1,0 +1,10 @@
+{
+	"name": "sourcestor",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://testgdpstor2.dfs.core.windows.net/"
+		}
+	}
+}
