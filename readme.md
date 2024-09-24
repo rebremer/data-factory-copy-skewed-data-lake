@@ -1,4 +1,4 @@
-## optimizing ADF Copy Performance for skewed Data Lakes
+## Optimizing ADF Copy Performance for skewed Data Lakes
 In this GitHub repo, two strategies are discussed to improve performance of data copying to and from Enterprise Data Lakes using Azure Storage. First strategy is applicable on Azure storage account in which data is evenly distributed, the second is applicable where data distribution is uneven. 
 
 For the evenly distributed data lake, standard ADF functionality is used to build the copy pipeline. For the unevenly distributed data, an Azure Function is used to scan the data pockets and to make sure that copy activity are maximally parallized where the data is.
