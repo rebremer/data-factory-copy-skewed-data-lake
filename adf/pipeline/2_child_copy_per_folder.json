@@ -1,5 +1,5 @@
 {
-	"name": "2b_child_unevenly_distributed_data",
+	"name": "2_child_copy_per_folder",
 	"properties": {
 		"activities": [
 			{
@@ -57,7 +57,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {
-											"value": "@pipeline().parameters.Container",
+											"value": "@pipeline().parameters.container",
 											"type": "Expression"
 										},
 										"folder": {
@@ -74,7 +74,7 @@
 									"parameters": {
 										"container": "backup",
 										"folder": {
-											"value": "@concat(pipeline().parameters.Container,'/', item().name)",
+											"value": "@concat(pipeline().parameters.container,'/', item().name)",
 											"type": "Expression"
 										}
 									}
@@ -86,29 +86,91 @@
 			},
 			{
 				"name": "Get Folders",
-				"type": "WebActivity",
+				"type": "Switch",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"method": "GET",
-					"url": {
-						"value": "@concat('https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?storage_account=testgdpstor2&storage_container=', pipeline().parameters.Container)",
+					"on": {
+						"value": "@string(pipeline().parameters.data_distribution)",
 						"type": "Expression"
-					}
+					},
+					"cases": [
+						{
+							"value": "uneven",
+							"activities": [
+								{
+									"name": "uneven_get_folders",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"method": "GET",
+										"url": {
+											"value": "@concat('https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?code=2ho8Ha6cClJRemxOzni9npnFH-Fk7TkJtUJKMRxb1fSKAzFuHKXeKA%3D%3D&storage_account=testgdpstor2&storage_container=', pipeline().parameters.Container)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					],
+					"defaultActivities": [
+						{
+							"name": "even_get_folders",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "sourcestor",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.Container",
+											"type": "Expression"
+										},
+										"folder": "@coalesce(null)"
+									}
+								},
+								"fieldList": [
+									"childItems"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
 		"parameters": {
-			"Container": {
+			"container": {
 				"type": "string",
 				"defaultValue": "adfparalleltest"
+			},
+			"data_distribution": {
+				"type": "string",
+				"defaultValue": "even"
 			}
 		},
 		"annotations": []

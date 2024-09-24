@@ -1,5 +1,5 @@
 {
-	"name": "1a_root_evenly_distributed_data",
+	"name": "1_root_copy_per_container",
 	"properties": {
 		"activities": [
 			{
@@ -28,6 +28,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -63,10 +64,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"pipeline": {
-									"referenceName": "1b_child_evenly_distributed_data",
-									"type": "PipelineReference"
-								},
 								"waitOnCompletion": false,
 								"parameters": {
 									"Container": {
