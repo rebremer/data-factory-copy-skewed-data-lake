@@ -56,10 +56,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 #print(str(folder.name))
                 folder_recursive_copy.append(folder.name) 
 
+    if not folder_recursive_copy:
+        # no parallization possible, copy container as a whole
+        folder_recursive_copy.append("*") 
+    
     folder_recursive_copy_json = [{"name": name} for name in folder_recursive_copy]
     folder_recursive_copy_json_str = json.dumps(folder_recursive_copy_json)
 
-    if folder_recursive_copy_json_str == None:
-        return func.HttpResponse(f"no folders", status_code=404)
-    else:
-        return func.HttpResponse(folder_recursive_copy_json_str, mimetype="application/json")
+    return func.HttpResponse(folder_recursive_copy_json_str, mimetype="application/json")
