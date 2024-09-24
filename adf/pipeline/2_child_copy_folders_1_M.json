@@ -119,7 +119,7 @@
 									}
 								},
 								{
-									"name": "Set variable1",
+									"name": "Set list folders uneven",
 									"type": "SetVariable",
 									"dependsOn": [
 										{
@@ -137,7 +137,7 @@
 									"typeProperties": {
 										"variableName": "list_folders",
 										"value": {
-											"value": "@activity('uneven_get_folders').output.Response",
+											"value": "@json(activity('uneven_get_folders').output.Response)",
 											"type": "Expression"
 										}
 									}
@@ -184,7 +184,7 @@
 							}
 						},
 						{
-							"name": "Set list folders",
+							"name": "Set list folders even",
 							"type": "SetVariable",
 							"dependsOn": [
 								{
