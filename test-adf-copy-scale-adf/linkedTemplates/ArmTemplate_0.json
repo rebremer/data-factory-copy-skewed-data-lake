@@ -491,7 +491,7 @@
 												"value": "@item().name",
 												"type": "Expression"
 											},
-											"data_distribution": "even"
+											"data_distribution": "uneven"
 										}
 									}
 								}
