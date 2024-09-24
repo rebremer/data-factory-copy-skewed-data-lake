@@ -1,5 +1,5 @@
 {
-	"name": "1_root_copy_per_container",
+	"name": "1_root_copy_containers_1_N",
 	"properties": {
 		"activities": [
 			{
