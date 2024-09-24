@@ -1,0 +1,513 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "test-adf-copy-scale-adf"
+		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://test-adf-copy-scale-fun.azurewebsites.net"
+		},
+		"adlsgen2sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://testgdpinformationf.dfs.core.windows.net/"
+		},
+		"adlsgen2source_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://testgdpstor2.blob.core.windows.net/"
+		},
+		"sourcestor_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://testgdpstor2.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureFunction1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"storage_account": {
+						"type": "string"
+					},
+					"storage_container": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]",
+					"authentication": "Anonymous",
+					"functionKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adlsgen2sink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adlsgen2sink_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adlsgen2source')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"serviceEndpoint": "[parameters('adlsgen2source_properties_typeProperties_serviceEndpoint')]",
+					"accountKind": "StorageV2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourcestor')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sourcestor_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sinkstor')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adlsgen2sink",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adlsgen2sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sourcestor')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sourcestor",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sourcestor')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/2_child_copy_folders_1_M')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy folders",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Folders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('list_folders')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "copy folder recursively",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "sourcestor",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"folder": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "sinkstor",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": "backup",
+												"folder": {
+													"value": "@concat(pipeline().parameters.container,'/', item().name)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Get Folders",
+						"type": "Switch",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@string(pipeline().parameters.data_distribution)",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "uneven",
+									"activities": [
+										{
+											"name": "uneven_get_folders",
+											"type": "WebActivity",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "0.12:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"method": "GET",
+												"headers": {},
+												"url": {
+													"value": "@concat('https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?code=2ho8Ha6cClJRemxOzni9npnFH-Fk7TkJtUJKMRxb1fSKAzFuHKXeKA%3D%3D&storage_account=testgdpstor2&storage_container=', pipeline().parameters.Container)",
+													"type": "Expression"
+												}
+											}
+										},
+										{
+											"name": "Set list folders uneven",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "uneven_get_folders",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"policy": {
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "list_folders",
+												"value": {
+													"value": "@json(activity('uneven_get_folders').output.Response)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "even_get_folders",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "sourcestor",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.Container",
+													"type": "Expression"
+												},
+												"folder": "@coalesce(null)"
+											}
+										},
+										"fieldList": [
+											"childItems"
+										],
+										"storeSettings": {
+											"type": "AzureBlobFSReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										},
+										"formatSettings": {
+											"type": "BinaryReadSettings"
+										}
+									}
+								},
+								{
+									"name": "Set list folders even",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "even_get_folders",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "list_folders",
+										"value": {
+											"value": "@activity('even_get_folders').output.childItems",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"container": {
+						"type": "string",
+						"defaultValue": "adfparalleltest"
+					},
+					"data_distribution": {
+						"type": "string",
+						"defaultValue": "even"
+					}
+				},
+				"variables": {
+					"list_folders": {
+						"type": "Array"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sourcestor')]",
+				"[concat(variables('factoryId'), '/datasets/sinkstor')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/1_root_copy_containers_1_N')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get containers",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "sourcestor",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": "@coalesce(null)",
+									"folder": "@coalesce(null)"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Copy containers",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get containers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Containers').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Copy container",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "2_child_copy_folders_1_M",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": false,
+										"parameters": {
+											"container": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"data_distribution": "even"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sourcestor')]",
+				"[concat(variables('factoryId'), '/pipelines/2_child_copy_folders_1_M')]"
+			]
+		}
+	]
+}

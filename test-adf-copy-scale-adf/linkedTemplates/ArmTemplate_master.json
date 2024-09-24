@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "test-adf-copy-scale-adf"
+		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
+		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://test-adf-copy-scale-fun.azurewebsites.net"
+		},
+		"adlsgen2sink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://testgdpinformationf.dfs.core.windows.net/"
+		},
+		"adlsgen2source_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://testgdpstor2.blob.core.windows.net/"
+		},
+		"sourcestor_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://testgdpstor2.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "test-adf-copy-scale-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureFunction1_functionKey": {
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					},
+					"AzureFunction1_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
+					},
+					"adlsgen2sink_properties_typeProperties_url": {
+						"value": "[parameters('adlsgen2sink_properties_typeProperties_url')]"
+					},
+					"adlsgen2source_properties_typeProperties_serviceEndpoint": {
+						"value": "[parameters('adlsgen2source_properties_typeProperties_serviceEndpoint')]"
+					},
+					"sourcestor_properties_typeProperties_url": {
+						"value": "[parameters('sourcestor_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
