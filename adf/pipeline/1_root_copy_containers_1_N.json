@@ -64,12 +64,17 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"pipeline": {
+									"referenceName": "2_child_copy_folders_1_M",
+									"type": "PipelineReference"
+								},
 								"waitOnCompletion": false,
 								"parameters": {
-									"Container": {
+									"container": {
 										"value": "@item().name",
 										"type": "Expression"
-									}
+									},
+									"data_distribution": "even"
 								}
 							}
 						}
