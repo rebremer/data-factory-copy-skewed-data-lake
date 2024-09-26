@@ -72,9 +72,12 @@
 									"referenceName": "sinkstor",
 									"type": "DatasetReference",
 									"parameters": {
-										"container": "backup",
+										"container": {
+											"value": "@pipeline().parameters.container",
+											"type": "Expression"
+										},
 										"folder": {
-											"value": "@concat(pipeline().parameters.container,'/', item().name)",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
