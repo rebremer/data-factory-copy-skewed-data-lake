@@ -70,7 +70,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "sinkstor",
+									"referenceName": "sinkstorpremium",
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {
