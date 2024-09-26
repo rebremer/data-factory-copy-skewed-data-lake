@@ -23,6 +23,10 @@
 			"type": "string",
 			"defaultValue": "https://testgdpstor2.blob.core.windows.net/"
 		},
+		"sinkstorpremium_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://testbackstorprem.dfs.core.windows.net/"
+		},
 		"sourcestor_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://testgdpstor2.dfs.core.windows.net/"
@@ -86,6 +90,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sinkstorpremium')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sinkstorpremium_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sourcestor')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -133,6 +150,43 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/adlsgen2sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sinkstorpremium')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sinkstorpremium",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().folder",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sinkstorpremium')]"
 			]
 		},
 		{
@@ -195,7 +249,6 @@
 								"value": "@variables('list_folders')",
 								"type": "Expression"
 							},
-							"batchCount": 15,
 							"activities": [
 								{
 									"name": "copy folder recursively",
@@ -246,7 +299,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "sinkstor",
+											"referenceName": "sinkstorpremium",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -415,7 +468,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sourcestor')]",
-				"[concat(variables('factoryId'), '/datasets/sinkstor')]"
+				"[concat(variables('factoryId'), '/datasets/sinkstorpremium')]"
 			]
 		},
 		{

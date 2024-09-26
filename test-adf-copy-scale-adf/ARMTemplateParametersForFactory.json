@@ -17,6 +17,9 @@
 		"adlsgen2source_properties_typeProperties_serviceEndpoint": {
 			"value": "https://testgdpstor2.blob.core.windows.net/"
 		},
+		"sinkstorpremium_properties_typeProperties_url": {
+			"value": "https://testbackstorprem.dfs.core.windows.net/"
+		},
 		"sourcestor_properties_typeProperties_url": {
 			"value": "https://testgdpstor2.dfs.core.windows.net/"
 		}
