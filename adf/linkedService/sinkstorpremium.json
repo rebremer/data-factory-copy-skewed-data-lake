@@ -1,0 +1,10 @@
+{
+	"name": "sinkstorpremium",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://testbackstorprem.dfs.core.windows.net/"
+		}
+	}
+}
