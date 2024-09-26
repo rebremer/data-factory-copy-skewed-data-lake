@@ -19,6 +19,7 @@
 						"value": "@variables('list_folders')",
 						"type": "Expression"
 					},
+					"batchCount": 15,
 					"activities": [
 						{
 							"name": "copy folder recursively",
