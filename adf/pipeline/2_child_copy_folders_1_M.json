@@ -69,18 +69,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "sinkstorpremium",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": {
-											"value": "@pipeline().parameters.container",
-											"type": "Expression"
-										},
-										"folder": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "sinkstor",
+									"type": "DatasetReference"
 								}
 							]
 						}
