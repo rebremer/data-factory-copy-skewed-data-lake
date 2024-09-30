@@ -452,7 +452,7 @@
 				"parameters": {
 					"container": {
 						"type": "string",
-						"defaultValue": "adfparalleltest"
+						"defaultValue": "p004standardized"
 					},
 					"data_distribution": {
 						"type": "string",
