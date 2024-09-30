@@ -456,7 +456,7 @@
 					},
 					"data_distribution": {
 						"type": "string",
-						"defaultValue": "uneven"
+						"defaultValue": "even"
 					}
 				},
 				"variables": {
