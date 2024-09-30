@@ -117,7 +117,7 @@
 										"method": "GET",
 										"httpRequestTimeout": "00:10:00",
 										"url": {
-											"value": "@concat('https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?code=2ho8Ha6cClJRemxOzni9npnFH-Fk7TkJtUJKMRxb1fSKAzFuHKXeKA%3D%3D&storage_account=testgdpstor2&storage_container=', pipeline().parameters.container)",
+											"value": "@concat('https://test-adf-copy-scale-fun.azurewebsites.net/api/HttpGetCopyFolders?storage_account=testgdpstor2&storage_container=', pipeline().parameters.container)",
 											"type": "Expression"
 										}
 									}
