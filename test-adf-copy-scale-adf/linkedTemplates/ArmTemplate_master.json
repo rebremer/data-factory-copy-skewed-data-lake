@@ -25,7 +25,7 @@
 		},
 		"sinkstorpremium_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://testbackstorprem.dfs.core.windows.net/"
+			"defaultValue": "https://testgdpinformationf.dfs.core.windows.net/"
 		},
 		"sourcestor_properties_typeProperties_url": {
 			"type": "string",

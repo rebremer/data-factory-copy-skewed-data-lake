@@ -25,7 +25,7 @@
 		},
 		"sinkstorpremium_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://testbackstorprem.dfs.core.windows.net/"
+			"defaultValue": "https://testgdpinformationf.dfs.core.windows.net/"
 		},
 		"sourcestor_properties_typeProperties_url": {
 			"type": "string",
@@ -205,7 +205,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "sinkstorpremium",
+											"referenceName": "sinkstor",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -374,7 +374,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sourcestor')]",
-				"[concat(variables('factoryId'), '/datasets/sinkstorpremium')]"
+				"[concat(variables('factoryId'), '/datasets/sinkstor')]"
 			]
 		},
 		{
