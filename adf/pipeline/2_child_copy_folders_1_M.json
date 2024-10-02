@@ -50,7 +50,7 @@
 									}
 								},
 								"enableStaging": false,
-								"parallelCopies": 32
+								"parallelCopies": 20
 							},
 							"inputs": [
 								{
