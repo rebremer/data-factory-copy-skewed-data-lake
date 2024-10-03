@@ -53,17 +53,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "sinkstor",
+						"referenceName": "sourcestor",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.container",
-								"type": "Expression"
-							},
-							"folder": {
-								"value": "@coalesce(null)",
-								"type": "Expression"
-							}
+							"container": "p005standardized",
+							"folder": "@coalesce(null)"
 						}
 					}
 				]
