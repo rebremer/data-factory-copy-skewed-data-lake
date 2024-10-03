@@ -475,7 +475,8 @@
 					"list_folders": {
 						"type": "Array",
 						"defaultValue": [
-							"[['p004standardized','p005standardized']"
+							"p004standardized",
+							"p005standardized"
 						]
 					}
 				},
