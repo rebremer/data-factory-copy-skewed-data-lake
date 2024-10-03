@@ -434,7 +434,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
-													"value": "@item().name",
+													"value": "@item()",
 													"type": "Expression"
 												},
 												"folder": {
