@@ -3,64 +3,81 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy container",
-				"type": "Copy",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true
-						},
-						"formatSettings": {
-							"type": "BinaryReadSettings"
-						}
+					"items": {
+						"value": "[\"p004standardized\",\"p005standardized\"]",
+						"type": "Expression"
 					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						}
-					},
-					"enableStaging": false,
-					"parallelCopies": 32,
-					"dataIntegrationUnits": 128
-				},
-				"inputs": [
-					{
-						"referenceName": "sourcestor",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.container",
-								"type": "Expression"
+					"activities": [
+						{
+							"name": "copy container",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
 							},
-							"folder": {
-								"value": "@coalesce(null)",
-								"type": "Expression"
-							}
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 128
+							},
+							"inputs": [
+								{
+									"referenceName": "sourcestor",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"folder": {
+											"value": "@coalesce(null)",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sinkstor",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"folder": "@coalesce(null)"
+									}
+								}
+							]
 						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "sourcestor",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "p005standardized",
-							"folder": "@coalesce(null)"
-						}
-					}
-				]
+					]
+				}
 			}
 		],
 		"parameters": {
