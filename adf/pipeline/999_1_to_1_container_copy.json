@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "[\"p004standardized\",\"p005standardized\"]",
+						"value": "@variables('list_folders')",
 						"type": "Expression"
 					},
 					"activities": [
@@ -88,7 +88,11 @@
 		},
 		"variables": {
 			"list_folders": {
-				"type": "Array"
+				"type": "Array",
+				"defaultValue": [
+					"'p004standardized'",
+					"'p005standardized'"
+				]
 			}
 		},
 		"annotations": []
