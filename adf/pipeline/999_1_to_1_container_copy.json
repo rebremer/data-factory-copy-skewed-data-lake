@@ -51,6 +51,22 @@
 							},
 							"inputs": [
 								{
+									"referenceName": "sourcestor",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@item()",
+											"type": "Expression"
+										},
+										"folder": {
+											"value": "@coalesce(null)",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
 									"referenceName": "sinkstor",
 									"type": "DatasetReference",
 									"parameters": {
@@ -59,19 +75,6 @@
 											"type": "Expression"
 										},
 										"folder": "@coalesce(null)"
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "sourcestor",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": "p006standardized",
-										"folder": {
-											"value": "@coalesce(null)",
-											"type": "Expression"
-										}
 									}
 								}
 							]
@@ -84,7 +87,9 @@
 			"list_folders": {
 				"type": "Array",
 				"defaultValue": [
-					"p004standardized"
+					"p004standardized",
+					"p005standardized",
+					"p006standardized"
 				]
 			}
 		},
