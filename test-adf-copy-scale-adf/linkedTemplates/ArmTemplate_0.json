@@ -506,7 +506,10 @@
 											"type": "BinarySource",
 											"storeSettings": {
 												"type": "AzureBlobFSReadSettings",
-												"recursive": true
+												"recursive": true,
+												"modifiedDatetimeStart": null,
+												"modifiedDatetimeEnd": null,
+												"deleteFilesAfterCompletion": false
 											},
 											"formatSettings": {
 												"type": "BinaryReadSettings"
@@ -559,18 +562,13 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"container": {
-						"type": "string",
-						"defaultValue": "p004standardized"
-					}
-				},
 				"variables": {
 					"list_folders": {
 						"type": "Array",
 						"defaultValue": [
 							"p004standardized",
-							"p005standardized"
+							"p005standardized",
+							"p006standardized"
 						]
 					}
 				},
