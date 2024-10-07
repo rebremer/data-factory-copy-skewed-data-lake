@@ -80,12 +80,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"container": {
-				"type": "string",
-				"defaultValue": "p004standardized"
-			}
-		},
 		"variables": {
 			"list_folders": {
 				"type": "Array",
