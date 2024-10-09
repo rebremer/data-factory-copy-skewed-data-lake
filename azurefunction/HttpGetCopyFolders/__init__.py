@@ -52,15 +52,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         #print(str(folder.name))
         if folder.is_directory and not is_parent_path_in_list(folder.name, folder_recursive_copy):
             folder_size = get_folder_size(file_system_client, folder.name)
-            if folder_size < 5000000000: # if folder size is less than 5GB, then data can be copied recurcively, otherwise nested folders in separate copies
+            if folder_size < 250*(1024**3): # if folder size is less than 250 GB, then data can be copied resurcively, otherwise nested folders in separate copies
                 #print(str(folder.name))
                 folder_recursive_copy.append(folder.name) 
 
     if not folder_recursive_copy:
         # no parallization possible, copy container as a whole
-        folder_recursive_copy.append("*") 
+        folder_recursive_copy.append(None)
     
-    folder_recursive_copy_json = [{"name": name} for name in folder_recursive_copy]
+    folder_recursive_copy_json = [{"name": name} if name is not None else {"name": ""} for name in folder_recursive_copy]
     folder_recursive_copy_json_str = json.dumps(folder_recursive_copy_json)
 
     return func.HttpResponse(folder_recursive_copy_json_str, mimetype="application/json")
