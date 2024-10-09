@@ -219,7 +219,7 @@
 		"parameters": {
 			"container": {
 				"type": "string",
-				"defaultValue": "p004standardized"
+				"defaultValue": "bronze"
 			},
 			"data_distribution": {
 				"type": "string",
